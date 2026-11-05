@@ -51,11 +51,15 @@ body {
 }
         /* Glassmorphism elegante estilo Apple adaptado a tonos crema / pastel */
         .apple-glass {
-            background: rgba(255, 255, 255, 0.75);
-            backdrop-filter: blur(25px) saturate(180%);
-            -webkit-backdrop-filter: blur(25px) saturate(180%);
-            border: 1px solid rgba(255, 255, 255, 0.8);
-            box-shadow: 0 20px 40px rgba(28, 49, 94, 0.05), 0 1px 3px rgba(0, 0, 0, 0.02);
+            /* Liquid glass: conserva el tono claro, dejando ver suavemente el fondo */
+            background: rgba(250, 248, 245, 0.32);
+            backdrop-filter: blur(32px) saturate(175%);
+            -webkit-backdrop-filter: blur(32px) saturate(175%);
+            border: 1px solid rgba(255, 255, 255, 0.72);
+            box-shadow:
+                0 20px 40px rgba(28, 49, 94, 0.055),
+                0 1px 3px rgba(0, 0, 0, 0.025),
+                inset 0 1px 0 rgba(255, 255, 255, 0.55);
         }
 
         /* Animación de entrada con scroll */
