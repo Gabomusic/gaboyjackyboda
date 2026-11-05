@@ -84,9 +84,41 @@ body {
         .apple-btn:active {
             transform: scale(0.96);
         }
+
+        /* Detalles flotantes dorados: corazones y notas musicales */
+        #ambient-details {
+            position: fixed;
+            inset: 0;
+            z-index: 5;
+            overflow: hidden;
+            pointer-events: none;
+        }
+        .ambient-symbol {
+            position: absolute;
+            bottom: -36px;
+            color: #B8953B;
+            opacity: 0;
+            line-height: 1;
+            text-shadow: 0 1px 8px rgba(184, 149, 59, 0.16);
+            animation: ambient-drift var(--duration, 10s) ease-out forwards;
+            will-change: transform, opacity;
+        }
+        @keyframes ambient-drift {
+            0%   { opacity: 0; transform: translate3d(0, 0, 0) rotate(-8deg) scale(.82); }
+            18%  { opacity: var(--peak-opacity, .22); }
+            75%  { opacity: calc(var(--peak-opacity, .22) * .65); }
+            100% { opacity: 0; transform: translate3d(var(--drift, 24px), -110vh, 0) rotate(14deg) scale(1.08); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .ambient-symbol { animation: none; display: none; }
+        }
+
     </style>
 </head>
 <body class="antialiased selection:bg-navy-soft selection:text-white relative">
+
+    <!-- DETALLES DORADOS SUTILES EN EL FONDO -->
+    <div id="ambient-details" aria-hidden="true"></div>
 
     <!-- FLORES ESQUINA SUPERIOR IZQUIERDA -->
     <div class="fixed top-0 left-0 w-48 sm:w-72 pointer-events-none z-10 opacity-90">
@@ -355,6 +387,35 @@ body {
 
     <!-- JAVASCRIPT / LÓGICA DE INTERACCIÓN -->
     <script>
+        // Detalles ambientales: alterna notas musicales y corazones dorados
+        (function createAmbientDetails() {
+            const layer = document.getElementById("ambient-details");
+            if (!layer || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+            const symbols = ["♪", "♡", "♫", "♥"];
+            let nextSymbol = 0;
+
+            function addAmbientSymbol() {
+                if (layer.childElementCount >= 9) return;
+                const symbol = document.createElement("span");
+                symbol.className = "ambient-symbol";
+                symbol.textContent = symbols[nextSymbol % symbols.length];
+                nextSymbol++;
+
+                const duration = 8 + Math.random() * 5;
+                symbol.style.left = (5 + Math.random() * 90) + "%";
+                symbol.style.setProperty("--duration", duration + "s");
+                symbol.style.setProperty("--drift", (Math.random() * 70 - 35) + "px");
+                symbol.style.setProperty("--peak-opacity", (0.12 + Math.random() * 0.13).toFixed(2));
+                symbol.style.fontSize = (30 + Math.random() * 26) + "px";
+                layer.appendChild(symbol);
+                window.setTimeout(() => symbol.remove(), duration * 1000 + 150);
+            }
+
+            addAmbientSymbol();
+            window.setInterval(addAmbientSymbol, 1450);
+        })();
+
         // Animaciones Scroll Reveal
         function reveal() {
             const reveals = document.querySelectorAll(".reveal");
